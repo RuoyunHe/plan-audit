@@ -1,0 +1,14 @@
+{
+  "tasks": [
+    { "id": "wash-rice", "start": 0, "end": 3, "duration": 3, "resources": { "cook": 1 }, "deps": [], "completed": true },
+    { "id": "cook-rice", "start": 3, "end": 23, "duration": 20, "resources": { "rice-cooker": 1 }, "deps": ["wash-rice"] },
+    { "id": "chop-vegetables", "start": 3, "end": 9, "duration": 6, "resources": { "cook": 1 }, "deps": [] },
+    { "id": "stir-fry", "start": 12, "end": 20, "duration": 8, "resources": { "cook": 1, "burner": 1 }, "deps": ["chop-vegetables"] },
+    { "id": "serve", "start": 23, "end": 25, "duration": 2, "resources": { "cook": 1 }, "deps": ["cook-rice", "stir-fry"] }
+  ],
+  "capacities": { "cook": 1, "rice-cooker": 1, "burner": 1 },
+  "blocks": [{ "resource": "cook", "start": 9, "end": 12, "units": 1 }],
+  "previousCompleted": [
+    { "id": "wash-rice", "start": 0, "end": 3, "duration": 3, "resources": { "cook": 1 }, "deps": [], "completed": true }
+  ]
+}
