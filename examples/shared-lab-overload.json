@@ -1,0 +1,16 @@
+{
+  "tasks": [
+    { "id": "load-a", "start": 0, "end": 2, "duration": 2, "resources": { "technician": 1 }, "completed": true },
+    { "id": "load-b", "start": 2, "end": 4, "duration": 2, "resources": { "technician": 1 } },
+    { "id": "load-c", "start": 4, "end": 6, "duration": 2, "resources": { "technician": 1 } },
+    { "id": "spin-a", "start": 2, "end": 12, "duration": 10, "resources": { "centrifuge": 1 }, "deps": ["load-a"] },
+    { "id": "spin-b", "start": 4, "end": 14, "duration": 10, "resources": { "centrifuge": 1 }, "deps": ["load-b"] },
+    { "id": "spin-c", "start": 6, "end": 16, "duration": 10, "resources": { "centrifuge": 1 }, "deps": ["load-c"] },
+    { "id": "measure-a", "start": 12, "end": 18, "duration": 6, "resources": { "spectrometer": 1 }, "deps": ["spin-a"] },
+    { "id": "measure-b", "start": 18, "end": 24, "duration": 6, "resources": { "spectrometer": 1 }, "deps": ["spin-b"] },
+    { "id": "measure-c", "start": 24, "end": 30, "duration": 6, "resources": { "spectrometer": 1 }, "deps": ["spin-c"] }
+  ],
+  "capacities": { "technician": 1, "centrifuge": 2, "spectrometer": 1 },
+  "blocks": [{ "resource": "spectrometer", "start": 0, "end": 8, "units": 1 }],
+  "previousCompleted": [{ "id": "load-a", "start": 0, "end": 2, "duration": 2, "resources": { "technician": 1 }, "completed": true }]
+}

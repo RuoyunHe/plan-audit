@@ -26,16 +26,37 @@ console.log(result.ok); // true
 ```
 
 The same import works in a browser `<script type="module">` served over HTTP. There are no
-runtime dependencies or platform APIs in `index.mjs`. Node 18+ runs the CLI and tests:
+runtime dependencies or platform APIs in `index.mjs`. With Node 18+, reproduce from the
+**complete repository**, which contains the tests; the runtime package excludes `test/`:
 
 ```sh
+git clone https://github.com/RuoyunHe/plan-audit.git
+cd plan-audit
 node cli.mjs examples/dinner-plan.json
 npm test
 ```
 
+No `npm install` is needed. Expect **13 passing tests**, including the CLI rejection path.
+A test run reporting zero tests is not verification; use the complete repository checkout.
+
 The CLI reads exactly one JSON file path, never stdin. Exit status is 0 for a valid schedule,
 1 for a schedule with violations, and 2 for a usage, file, or JSON parsing error. It writes
 the report to stdout; file and parsing errors go to stderr without echoing file contents.
+
+## Reproduce a shared laboratory conflict
+
+```sh
+node cli.mjs examples/shared-lab-valid.json
+node cli.mjs examples/shared-lab-overload.json
+```
+
+These original fictional fixtures use minutes from a common origin: one technician loads
+three batches, two centrifuges process them, and one spectrometer measures them after an
+initial reservation. They demonstrate dependencies, half-open boundaries, and frozen work.
+The first exits **0** with `ok: true`. The second moves only `spin-c` earlier and exits **1**
+with `RESOURCE_OVERLOAD`: `spin-a`, `spin-b`, and `spin-c` need three centrifuges from minute
+6 to 12, but only two exist. This nonzero exit is the expected rejection, not a CLI failure.
+These are scheduling examples, not laboratory protocols or validated scientific durations.
 
 ## Input contract
 
@@ -98,4 +119,4 @@ or optimality. An application must validate its own domain constraints separatel
 ## Development and license
 
 Tests cover malformed input, adversarial overlap, dependencies, temporal boundaries,
-completed-task preservation, and the original dinner example. MIT © 2026 RuoyunHe.
+completed-task preservation, dinner, and shared-laboratory CLI examples. MIT © 2026 RuoyunHe.

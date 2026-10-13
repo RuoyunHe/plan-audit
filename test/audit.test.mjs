@@ -102,3 +102,22 @@ test('dinner example passes; CLI outputs reports and rejects stdin', async () =>
   assert.equal(JSON.parse(result.stdout).ok, true);
   assert.equal(spawnSync(process.execPath, [fileURLToPath(cli), '-']).status, 2);
 });
+test('shared laboratory CLI accepts a feasible plan and rejects aggregate equipment overload', async () => {
+  const { fileURLToPath } = await import('node:url');
+  const cli = fileURLToPath(new URL('../cli.mjs', import.meta.url));
+  for (const [name, expectedStatus] of [['shared-lab-valid', 0], ['shared-lab-overload', 1]]) {
+    const path = fileURLToPath(new URL(`../examples/${name}.json`, import.meta.url));
+    const result = spawnSync(process.execPath, [cli, path], { encoding: 'utf8' });
+    assert.equal(result.status, expectedStatus, result.stderr);
+    assert.equal(result.stderr, '');
+    const report = JSON.parse(result.stdout);
+    assert.equal(report.ok, expectedStatus === 0);
+    assert.deepEqual([report.summary.taskCount, report.summary.completedCount, report.summary.span], [9, 1, 30]);
+    if (expectedStatus === 0) assert.deepEqual(report.violations, []);
+    else {
+      assert.deepEqual(report.violations.map(v => [v.code, v.taskIds]),
+        [['RESOURCE_OVERLOAD', ['spin-a', 'spin-b', 'spin-c']]]);
+      assert.match(report.violations[0].message, /uses 3 of 2 from 6 to 12/);
+    }
+  }
+});
